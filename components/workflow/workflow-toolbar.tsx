@@ -1303,7 +1303,6 @@ function WorkflowMenuComponent({
   state: ReturnType<typeof useWorkflowState>;
   actions: ReturnType<typeof useWorkflowActions>;
 }) {
-
   useEffect(() => {
     if (workflowId !== undefined) {
       toast.dismiss("workflow-navigation");
