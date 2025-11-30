@@ -27,7 +27,7 @@ const [integrationName]Plugin: IntegrationPlugin = {
   label: "[Integration Name]",
 
   // Brief description of what this integration does
-  description: "[Brief description of the integration]",
+  description: "[Integration Description]",
 
   // Icon component - imported from ./icon.tsx
   // Can be a custom SVG component or use a Lucide icon directly
@@ -76,7 +76,7 @@ const [integrationName]Plugin: IntegrationPlugin = {
 
       // Display name and description
       label: "[Action Label]",
-      description: "[What this action does]",
+      description: "[Action Description]",
 
       // Category for grouping in the action picker (usually integration name)
       category: "[Integration Name]",

@@ -84,7 +84,7 @@ async function [actionName](input: [ActionName]Input): Promise<[ActionName]Resul
 
 /**
  * [Action Name] Step
- * [Brief description of what this step does]
+ * [Action Description]
  *
  * The step function wraps the logic with:
  * - "use step" directive for workflow tracking

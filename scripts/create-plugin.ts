@@ -19,6 +19,7 @@ const TEMPLATE_DIR = join(PLUGINS_DIR, "_template");
 // Regex patterns used for case conversions (hoisted for performance)
 const LEADING_UPPERCASE_REGEX = /^[A-Z]/;
 const VALID_IDENTIFIER_REGEX = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
+const UNSAFE_PATH_REGEX = /[/\\]|\.\./;
 
 /**
  * Convert a string to various case formats
@@ -55,6 +56,22 @@ function toTitleCase(str: string): string {
       /\w\S*/g,
       (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
     );
+}
+
+/**
+ * Escape special characters for use in string literals.
+ */
+function escapeString(str: string): string {
+  return str
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/'/g, "\\'")
+    .replace(/`/g, "\\`")
+    .replace(/\$/g, "\\$")
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r")
+    .replace(/\t/g, "\\t")
+    .replace(/\0/g, "\\0");
 }
 
 /**
@@ -106,8 +123,8 @@ function replacePlaceholders(content: string, config: PluginConfig): string {
       .replace(/\[INTEGRATION_NAME\]/g, intUpperSnake)
       .replace(/\[Integration Name\]/g, intTitle)
       .replace(
-        /\[Brief description of the integration\]/g,
-        integrationDescription
+        /\[Integration Description\]/g,
+        escapeString(integrationDescription)
       )
       // Action placeholders
       .replace(/\[action-slug\]/g, actKebab)
@@ -116,7 +133,7 @@ function replacePlaceholders(content: string, config: PluginConfig): string {
       .replace(/\[ACTION_NAME\]/g, actUpperSnake)
       .replace(/\[Action Name\]/g, actTitle)
       .replace(/\[Action Label\]/g, actTitle)
-      .replace(/\[What this action does\]/g, actionDescription)
+      .replace(/\[Action Description\]/g, escapeString(actionDescription))
   );
 }
 
@@ -137,7 +154,7 @@ function getTemplateFiles(actionSlug: string) {
  * Main execution
  */
 async function main(): Promise<void> {
-  console.log("\n🔧 Create New Plugin\n");
+  console.log("\n🔧 Create New Plugin for Workflow Builder\n");
 
   // Check if template directory exists
   if (!existsSync(TEMPLATE_DIR)) {
@@ -150,10 +167,13 @@ async function main(): Promise<void> {
 
   // Prompt for plugin details
   const integrationName = await input({
-    message: "Integration name:",
+    message: "Integration Name:",
     validate: (value) => {
       if (!value.trim()) {
         return "Integration name is required";
+      }
+      if (UNSAFE_PATH_REGEX.test(value)) {
+        return "Name cannot contain path separators (/, \\) or '..'";
       }
       const camel = toCamelCase(value);
       const pascal = toPascalCase(value);
@@ -170,7 +190,7 @@ async function main(): Promise<void> {
   });
 
   const integrationDescription = await input({
-    message: "Integration description (<10 words):",
+    message: "Integration Description (<10 words):",
     validate: (value) => {
       if (!value.trim()) {
         return "Integration description is required";
@@ -180,10 +200,13 @@ async function main(): Promise<void> {
   });
 
   const actionName = await input({
-    message: "Action name:",
+    message: "Action Name:",
     validate: (value) => {
       if (!value.trim()) {
         return "Action name is required";
+      }
+      if (UNSAFE_PATH_REGEX.test(value)) {
+        return "Name cannot contain path separators (/, \\) or '..'";
       }
       const camel = toCamelCase(value);
       const pascal = toPascalCase(value);
@@ -195,7 +218,7 @@ async function main(): Promise<void> {
   });
 
   const actionDescription = await input({
-    message: "Action description (<10 words):",
+    message: "Action Description (<10 words):",
     validate: (value) => {
       if (!value.trim()) {
         return "Action description is required";
@@ -215,7 +238,7 @@ async function main(): Promise<void> {
   const actionSlug = toKebabCase(actionName);
   const pluginDir = join(PLUGINS_DIR, pluginName);
 
-  console.log(`\n📁 Creating plugin: ${pluginName}`);
+  console.log(`\n📁 Generating plugin: ${pluginName}`);
 
   // Create directories
   mkdirSync(join(pluginDir, "steps"), { recursive: true });
@@ -250,7 +273,7 @@ async function main(): Promise<void> {
   }
 
   // Run discover-plugins to register the new plugin
-  console.log("\n🔍 Running plugin discovery...");
+  console.log("\n🔍 Adding plugin to registry...");
   execFileSync("pnpm", ["discover-plugins"], { stdio: "inherit" });
 
   console.log(
@@ -264,7 +287,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((error: unknown) => {
-  // Handle user cancellation (Ctrl+C) gracefully
   if (error instanceof Error && error.name === "ExitPromptError") {
     console.log("\n👋 Come back anytime to create your plugin.\n");
     process.exit(0);
