@@ -41,10 +41,6 @@ const resendPlugin: IntegrationPlugin = {
     },
   },
 
-  dependencies: {
-    resend: "^6.4.0",
-  },
-
   // HTTP configuration for custom API requests
   // Allows users to make direct API calls to Resend via HTTP Request step
   httpConfig: {

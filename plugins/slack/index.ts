@@ -32,10 +32,6 @@ const slackPlugin: IntegrationPlugin = {
     },
   },
 
-  dependencies: {
-    "@slack/web-api": "^7.12.0",
-  },
-
   // HTTP configuration for custom API requests
   // Allows users to make direct API calls to Slack via HTTP Request step
   httpConfig: {

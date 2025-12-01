@@ -42,10 +42,6 @@ const linearPlugin: IntegrationPlugin = {
     },
   },
 
-  dependencies: {
-    "@linear/sdk": "^63.2.0",
-  },
-
   // HTTP configuration for custom API requests
   // Allows users to make direct GraphQL calls to Linear via HTTP Request step
   httpConfig: {
