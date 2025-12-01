@@ -24,12 +24,21 @@ import "./resend";
 import "./slack";
 import "./v0";
 
-export type { IntegrationPlugin, PluginAction, ActionWithFullId, PluginHttpConfig } from "./registry";
+export type {
+  ActionConfigField,
+  ActionConfigFieldBase,
+  ActionConfigFieldGroup,
+  ActionWithFullId,
+  IntegrationPlugin,
+  PluginAction,
+  PluginHttpConfig,
+} from "./registry";
 
 // Export the registry utilities
 export {
   computeActionId,
   findActionById,
+  flattenConfigFields,
   generateAIActionPrompts,
   getActionsByCategory,
   getAllActions,
@@ -45,6 +54,7 @@ export {
   getPluginEnvVars,
   getPluginHttpConfig,
   getSortedIntegrationTypes,
+  isFieldGroup,
   parseActionId,
   registerIntegration,
   requiresIntegration,
