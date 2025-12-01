@@ -1,6 +1,5 @@
 import type { IntegrationPlugin } from "../registry";
 import { registerIntegration } from "../registry";
-import { sendEmailCodegenTemplate } from "./codegen/send-email";
 import { ResendIcon } from "./icon";
 
 const resendPlugin: IntegrationPlugin = {
@@ -144,7 +143,6 @@ const resendPlugin: IntegrationPlugin = {
           ],
         },
       ],
-      codegenTemplate: sendEmailCodegenTemplate,
     },
   ],
 };

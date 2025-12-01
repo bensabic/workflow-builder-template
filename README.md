@@ -85,6 +85,7 @@ Visit [http://localhost:3000](http://localhost:3000) to get started.
 - **Native**: HTTP Request
 - **Resend**: Send Email
 - **Slack**: Send Slack Message
+- **Superagent**: Guard, Redact
 - **v0**: Create Chat, Send Message
 <!-- PLUGINS:END -->
 
