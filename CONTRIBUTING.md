@@ -499,6 +499,7 @@ export default myIntegrationPlugin;
 - `number`: Number input (with optional `min` property)
 - `select`: Dropdown (requires `options` array)
 - `schema-builder`: JSON schema builder for structured output
+- `group`: Groups related fields in a collapsible section
 
 #### Step 7: Run Plugin Discovery
 
