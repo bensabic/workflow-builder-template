@@ -1,7 +1,5 @@
-
 import type { IntegrationPlugin } from "../registry";
 import { registerIntegration } from "../registry";
-import { httpRequestCodegenTemplate } from "./codegen/http-request";
 import { NativeIcon } from "./icon";
 
 const nativePlugin: IntegrationPlugin = {
@@ -11,7 +9,6 @@ const nativePlugin: IntegrationPlugin = {
   requiresIntegration: false,
   icon: NativeIcon,
   formFields: [],
-  dependencies: {},
   actions: [
     {
       slug: "http-request",
@@ -83,7 +80,6 @@ const nativePlugin: IntegrationPlugin = {
           defaultValue: "{}",
         },
       ],
-      codegenTemplate: httpRequestCodegenTemplate,
     },
   ],
 };
