@@ -16,6 +16,10 @@ import {
   integrationsAtom,
   integrationsFetchedAtom,
   integrationsLoadingAtom,
+import { api, type Integration } from "@/lib/api-client";
+import {
+  integrationsAtom,
+  integrationsVersionAtom,
 } from "@/lib/integrations-store";
 import type { IntegrationType } from "@/lib/types/integration";
 import { IntegrationFormDialog } from "@/components/settings/integration-form-dialog";
@@ -42,6 +46,9 @@ export function IntegrationSelector({
   const fetched = useAtomValue(integrationsFetchedAtom);
   const fetchIntegrations = useSetAtom(fetchIntegrationsAtom);
   const [showNewDialog, setShowNewDialog] = useState(false);
+  const integrationsVersion = useAtomValue(integrationsVersionAtom);
+  const setGlobalIntegrations = useSetAtom(integrationsAtom);
+  const setIntegrationsVersion = useSetAtom(integrationsVersionAtom);
 
   // Filter integrations by type
   const integrations = useMemo(
@@ -53,6 +60,23 @@ export function IntegrationSelector({
   useEffect(() => {
     if (!fetched && !loading) {
       fetchIntegrations();
+  const loadIntegrations = async () => {
+    try {
+      setLoading(true);
+      const all = await api.integration.getAll();
+      // Update global store so other components can access it
+      setGlobalIntegrations(all);
+      const filtered = all.filter((i) => i.type === integrationType);
+      setIntegrations(filtered);
+      
+      // Auto-select if only one option and nothing selected yet
+      if (filtered.length === 1 && !value) {
+        onChange(filtered[0].id);
+      }
+    } catch (error) {
+      console.error("Failed to load integrations:", error);
+    } finally {
+      setLoading(false);
     }
   }, [fetched, loading, fetchIntegrations]);
 
@@ -62,6 +86,9 @@ export function IntegrationSelector({
       onChange(integrations[0].id);
     }
   }, [integrations, value, fetched, onChange]);
+    loadIntegrations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [integrationType, integrationsVersion]);
 
   const handleValueChange = (newValue: string) => {
     if (newValue === "__new__") {
@@ -77,6 +104,8 @@ export function IntegrationSelector({
     await fetchIntegrations();
     onChange(integrationId);
     setShowNewDialog(false);
+    // Increment version to trigger auto-fix for other nodes that need this integration type
+    setIntegrationsVersion((v) => v + 1);
   };
 
   if (loading || !fetched) {

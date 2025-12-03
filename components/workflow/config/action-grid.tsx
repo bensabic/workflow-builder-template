@@ -1,7 +1,7 @@
 "use client";
 
-import { Database, Search, Settings } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Database, Search, Settings, Zap } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { IntegrationIcon } from "@/components/ui/integration-icon";
 import { Label } from "@/components/ui/label";
@@ -56,6 +56,7 @@ function useAllActions(): ActionType[] {
 type ActionGridProps = {
   onSelectAction: (actionType: string) => void;
   disabled?: boolean;
+  isNewlyCreated?: boolean;
 };
 
 function ActionIcon({ action }: { action: ActionType }) {
@@ -70,9 +71,20 @@ function ActionIcon({ action }: { action: ActionType }) {
   return <Settings className="size-8" />;
 }
 
-export function ActionGrid({ onSelectAction, disabled }: ActionGridProps) {
+export function ActionGrid({
+  onSelectAction,
+  disabled,
+  isNewlyCreated,
+}: ActionGridProps) {
   const [filter, setFilter] = useState("");
   const actions = useAllActions();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isNewlyCreated && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isNewlyCreated]);
 
   const filteredActions = actions.filter((action) => {
     const searchTerm = filter.toLowerCase();
@@ -97,6 +109,7 @@ export function ActionGrid({ onSelectAction, disabled }: ActionGridProps) {
             id="action-filter"
             onChange={(e) => setFilter(e.target.value)}
             placeholder="Search actions..."
+            ref={inputRef}
             value={filter}
           />
         </div>
