@@ -284,6 +284,7 @@ const beehiivPlugin: IntegrationPlugin = {
           type: "template-input",
           placeholder: "{{GetSubscription.id}}",
           example: "sub_00000000-0000-0000-0000-000000000000",
+          required: true,
         },
         {
           key: "doubleOptOverride",
