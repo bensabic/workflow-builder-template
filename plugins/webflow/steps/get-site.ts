@@ -73,7 +73,9 @@ async function stepHandler(
   }
 
   try {
-    const response = await fetch(`${WEBFLOW_API_URL}/sites/${input.siteId}`, {
+    const response = await fetch(
+      `${WEBFLOW_API_URL}/sites/${encodeURIComponent(input.siteId)}`,
+      {
       method: "GET",
       headers: {
         Accept: "application/json",

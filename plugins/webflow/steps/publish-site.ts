@@ -86,7 +86,7 @@ async function stepHandler(
     }
 
     const response = await fetch(
-      `${WEBFLOW_API_URL}/sites/${input.siteId}/publish`,
+      `${WEBFLOW_API_URL}/sites/${encodeURIComponent(input.siteId)}/publish`,
       {
         method: "POST",
         headers: {
