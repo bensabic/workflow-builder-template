@@ -19,6 +19,7 @@ import "./blob";
 import "./fal";
 import "./firecrawl";
 import "./github";
+import "./hunter";
 import "./linear";
 import "./perplexity";
 import "./resend";
