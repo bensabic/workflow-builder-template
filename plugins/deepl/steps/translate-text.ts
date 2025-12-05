@@ -123,7 +123,9 @@ async function stepHandler(
     return {
       success: true,
       translatedText: translation.text,
-      detectedSourceLang: translation.detected_source_language,
+      // detected_source_language is always included in DeepL's response, but adding fallback for type safety
+      detectedSourceLang:
+        translation.detected_source_language || input.sourceLang || "unknown",
     };
   } catch (error) {
     return {
