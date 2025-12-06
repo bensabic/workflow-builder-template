@@ -113,7 +113,10 @@ async function stepHandler(
   const identifierType = input.identifierType || "domain";
 
   if (identifierType === "domain") {
-    if (!identifier.includes(".")) {
+    // Validate domain format: must have at least one character before and after the dot, no spaces, no leading/trailing dot
+    if (
+      !/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?(\.[a-zA-Z]{2,})+$/.test(identifier)
+    ) {
       return {
         success: false,
         error: "Invalid domain format. Expected format: example.com",
